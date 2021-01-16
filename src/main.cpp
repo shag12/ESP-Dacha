@@ -367,6 +367,7 @@ void h_get2() {
           ez.canvas.color(TFT_BLACK);
           ez.canvas.print("Outdoor: ");
           ez.canvas.color(TFT_BLUE);
+          //ez.canvas.x(200);
           ez.canvas.println(String(term));
           
           ez.canvas.font(&FreeSansBold12pt7b);
@@ -375,6 +376,7 @@ void h_get2() {
           ez.canvas.color(TFT_BLACK);
           ez.canvas.print("Umyvalnya: ");
           ez.canvas.color(TFT_RED);
+          ez.canvas.x(200);
           ez.canvas.println(String(term));
           
           devices_0_z3k = doc["devices"][0]["io"]["z3k-state"]["4099"];
@@ -382,6 +384,7 @@ void h_get2() {
           ez.canvas.color(TFT_BLACK);
           ez.canvas.print("Andrey:         ");
           ez.canvas.color(TFT_RED);
+          ez.canvas.x(200);
           ez.canvas.println(String(term));
           
           devices_0_z3k = doc["devices"][0]["io"]["z3k-state"]["4100"];
@@ -389,6 +392,7 @@ void h_get2() {
           ez.canvas.color(TFT_BLACK);
           ez.canvas.print("Kuhnya:         ");
           ez.canvas.color(TFT_RED);
+          ez.canvas.x(200);
           ez.canvas.println(String(term)+"    ");
           
           devices_0_z3k = doc["devices"][0]["io"]["z3k-state"]["4108"];
@@ -396,6 +400,7 @@ void h_get2() {
           ez.canvas.color(TFT_BLACK);
           ez.canvas.print("Vanya:           ");
           ez.canvas.color(TFT_RED);
+          ez.canvas.x(200);
           ez.canvas.println(String(term)+"    ");
           
           devices_0_z3k = doc["devices"][0]["io"]["z3k-state"]["4109"];
@@ -403,6 +408,7 @@ void h_get2() {
           ez.canvas.color(TFT_BLACK);
           ez.canvas.print("Mama:      ");
           ez.canvas.color(TFT_RED);
+          ez.canvas.x(200);
           ez.canvas.println(String(term)+"    ");
           
         
