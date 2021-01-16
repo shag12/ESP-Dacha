@@ -53,7 +53,7 @@
 "-----END CERTIFICATE-----\n";
 
 
-  const char* serverName = "https://zont-online.ru/api/devices";
+const char* serverName = "https://zont-online.ru/api/devices";
 
 
 
@@ -72,22 +72,25 @@ void h_get2();
 
 
 
+
 void setup() {
   #include <themes/default.h>
   #include <themes/dark.h>
   ezt::setDebug(INFO);
   ez.begin();
-   USE_SERIAL.begin(115200);
+  ez.clock.tz = "Europe/Moscow";
+  USE_SERIAL.begin(115200);
 
-    USE_SERIAL.println();
-    USE_SERIAL.println();
-    USE_SERIAL.println();
-
-    for(uint8_t t = 4; t > 0; t--) {
-        USE_SERIAL.printf("[SETUP] WAIT %d...\n", t);
-        USE_SERIAL.flush();
-        delay(1000);
-    }
+  USE_SERIAL.println();
+  USE_SERIAL.println();
+  USE_SERIAL.println();
+  for(uint8_t t = 4; t > 0; t--) {
+    USE_SERIAL.printf("[SETUP] WAIT %d...\n", t);
+    USE_SERIAL.flush();
+    delay(1000);
+  }
+  
+  
 }
 
 void loop() {
@@ -102,6 +105,7 @@ void loop() {
   mainmenu.upOnFirst("last|up");
   mainmenu.downOnLast("first|down");
   mainmenu.run();
+  
 }
 
 
@@ -185,20 +189,15 @@ void dacha() {
    ez.header.show("Dacha");
    ez.buttons.show("#" + exit_button + "#");
   while(true) {
-    //ez.screen.clear();
-    //ez.header.show("Dacha ПРОВЕРКА");
-    //ez.buttons.show("#" + exit_button + "#");
-    //ez.canvas.font(&FreeSans9pt7b);
-    //ez.canvas.lmargin(10);
-    //ez.canvas.println("Thermal:"); 
+ 
     h_get2();
 
     for(i=0;i<200000;i++) {
       String btn = ez.buttons.poll();
       //if (btn == "http") h_get();
       if (btn == "Exit") return;
+
     }
-    //ez.screen.clear();
   }
 }
 
@@ -208,12 +207,6 @@ void dacha_a() {
    ez.header.show("Dacha ALL");
    ez.buttons.show("#" + exit_button + "#");
   while(true) {
-    //ez.screen.clear();
-    //ez.header.show("Dacha ПРОВЕРКА");
-    //ez.buttons.show("#" + exit_button + "#");
-    //ez.canvas.font(&FreeSans9pt7b);
-    //ez.canvas.lmargin(10);
-    //ez.canvas.println("Thermal:"); 
     h_get();
 
     for(i=0;i<200000;i++) {
@@ -221,7 +214,7 @@ void dacha_a() {
       //if (btn == "http") h_get();
       if (btn == "Exit") return;
     }
-    //ez.screen.clear();
+
   }
 }
 
@@ -238,22 +231,18 @@ void h_get() {
   // Set timer to 5 seconds (5000)
   // unsigned long timerDelay = 5000; 
 
-  //StaticJsonDocument<3500> doc;
   DynamicJsonDocument doc(24576);
   
-  //ez.screen.clear();
   
   HTTPClient http;
 
         USE_SERIAL.print("[HTTP] begin...\n");
         // configure traged server and url
-        //http.begin("https://www.howsmyssl.com/a/check", ca); //HTTPS
         http.begin(serverName,rootCACertificate);
         //http.setAuthorization("z19015", "Assasin12");
         http.addHeader("Authorization", "Basic ejE5MDE1OlNlbTFyYXNhMTI=");
         http.addHeader("X-ZONT-Client", "shag12@mail.ru");
         http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-        //int httpCode = http.POST("{\"load_io\":True}");
         int httpCode = http.POST("load_io=true");
         
         USE_SERIAL.print("[HTTPS] POST...\n");
@@ -427,3 +416,4 @@ void h_get2() {
 
   http.end();
 }
+
