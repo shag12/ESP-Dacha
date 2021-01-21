@@ -130,15 +130,15 @@ void setup() {
     delay(1000);
   }
   
-  mqttReconnectTimer = xTimerCreate("mqttTimer", pdMS_TO_TICKS(2000), pdFALSE, (void*)0, reinterpret_cast<TimerCallbackFunction_t>(connectToMqtt));
+  //mqttReconnectTimer = xTimerCreate("mqttTimer", pdMS_TO_TICKS(2000), pdFALSE, (void*)0, reinterpret_cast<TimerCallbackFunction_t>(connectToMqtt));
   
-  mqttClient.onConnect(onMqttConnect);
-  mqttClient.onDisconnect(onMqttDisconnect);
-  mqttClient.onSubscribe(onMqttSubscribe);
-  mqttClient.onUnsubscribe(onMqttUnsubscribe);
-  mqttClient.onMessage(onMqttMessage);
-  mqttClient.onPublish(onMqttPublish);
-  mqttClient.setServer(MQTT_HOST, MQTT_PORT);
+  //mqttClient.onConnect(onMqttConnect);
+  //mqttClient.onDisconnect(onMqttDisconnect);
+  //mqttClient.onSubscribe(onMqttSubscribe);
+  //mqttClient.onUnsubscribe(onMqttUnsubscribe);
+  //mqttClient.onMessage(onMqttMessage);
+  //mqttClient.onPublish(onMqttPublish);
+  //mqttClient.setServer(MQTT_HOST, MQTT_PORT);
 
   
 }
@@ -239,7 +239,7 @@ void dacha() {
    ez.header.show("Dacha");
    ez.buttons.show("#" + exit_button + "#");
 
-  void connectToMqtt();
+  //void connectToMqtt();
 
   while(true) {
  
@@ -318,8 +318,8 @@ void h_get() {
 
                 // Test if parsing succeeds.
                 if (error) {
-                  Serial.print(F("deserializeJson() failed: "));
-                  Serial.println(error.f_str());
+                  USE_SERIAL.print(F("deserializeJson() failed: "));
+                  USE_SERIAL.println(error.f_str());
                   return;
                 }
                 ez.canvas.clear();
@@ -406,8 +406,8 @@ void h_get2() {
 
           // Test if parsing succeeds.
           if (error) {
-            Serial.print(F("deserializeJson() failed: "));
-            Serial.println(error.f_str());
+            USE_SERIAL.print(F("deserializeJson() failed: "));
+            USE_SERIAL.println(error.f_str());
             return;
           }
           ez.canvas.clear();
@@ -480,30 +480,30 @@ void h_get2() {
 // MQTT!!!
 
 void connectToMqtt() {
-  Serial.println("Connecting to MQTT...");
+  USE_SERIAL.println("Connecting to MQTT...");
   mqttClient.connect();
 }
 
 
 void onMqttConnect(bool sessionPresent) {
-  Serial.println("Connected to MQTT.");
-  Serial.print("Session present: ");
-  Serial.println(sessionPresent);
+  USE_SERIAL.println("Connected to MQTT.");
+  USE_SERIAL.print("Session present: ");
+  USE_SERIAL.println(sessionPresent);
   uint16_t packetIdSub = mqttClient.subscribe(mqtt_topic, 2);
-  Serial.print("Subscribing at QoS 2, packetId: ");
-  Serial.println(packetIdSub);
+  USE_SERIAL.print("Subscribing at QoS 2, packetId: ");
+  USE_SERIAL.println(packetIdSub);
   //mqttClient.publish("test/lol", 0, true, "test 1");
-  //Serial.println("Publishing at QoS 0");
+  //USE_SERIAL.println("Publishing at QoS 0");
   //uint16_t packetIdPub1 = mqttClient.publish("test/lol", 1, true, "test 2");
-  //Serial.print("Publishing at QoS 1, packetId: ");
-  //Serial.println(packetIdPub1);
+  //USE_SERIAL.print("Publishing at QoS 1, packetId: ");
+  //USE_SERIAL.println(packetIdPub1);
   //uint16_t packetIdPub2 = mqttClient.publish("test/lol", 2, true, "test 3");
-  //Serial.print("Publishing at QoS 2, packetId: ");
-  //Serial.println(packetIdPub2);
+  //USE_SERIAL.print("Publishing at QoS 2, packetId: ");
+  //USE_SERIAL.println(packetIdPub2);
 }
 
 void onMqttDisconnect(AsyncMqttClientDisconnectReason reason) {
-  Serial.println("Disconnected from MQTT.");
+  USE_SERIAL.println("Disconnected from MQTT.");
 
   if (WiFi.isConnected()) {
     xTimerStart(mqttReconnectTimer, 0);
@@ -511,41 +511,41 @@ void onMqttDisconnect(AsyncMqttClientDisconnectReason reason) {
 }
 
 void onMqttSubscribe(uint16_t packetId, uint8_t qos) {
-  Serial.println("Subscribe acknowledged.");
-  Serial.print("  packetId: ");
-  Serial.println(packetId);
-  Serial.print("  qos: ");
-  Serial.println(qos);
+  USE_SERIAL.println("Subscribe acknowledged.");
+  USE_SERIAL.print("  packetId: ");
+  USE_SERIAL.println(packetId);
+  USE_SERIAL.print("  qos: ");
+  USE_SERIAL.println(qos);
 }
 
 void onMqttUnsubscribe(uint16_t packetId) {
-  Serial.println("Unsubscribe acknowledged.");
-  Serial.print("  packetId: ");
-  Serial.println(packetId);
+  USE_SERIAL.println("Unsubscribe acknowledged.");
+  USE_SERIAL.print("  packetId: ");
+  USE_SERIAL.println(packetId);
 }
 
 void onMqttMessage(char* topic, char* payload, AsyncMqttClientMessageProperties properties, size_t len, size_t index, size_t total) {
-  Serial.println("Publish received.");
-  Serial.print("  topic: ");
-  Serial.println(topic);
-  Serial.print("  qos: ");
-  Serial.println(properties.qos);
-  Serial.print("  dup: ");
-  Serial.println(properties.dup);
-  Serial.print("  retain: ");
-  Serial.println(properties.retain);
-  Serial.print("  len: ");
-  Serial.println(len);
-  Serial.print("  index: ");
-  Serial.println(index);
-  Serial.print("  total: ");
-  Serial.println(total);
+  USE_SERIAL.println("Publish received.");
+  USE_SERIAL.print("  topic: ");
+  USE_SERIAL.println(topic);
+  USE_SERIAL.print("  qos: ");
+  USE_SERIAL.println(properties.qos);
+  USE_SERIAL.print("  dup: ");
+  USE_SERIAL.println(properties.dup);
+  USE_SERIAL.print("  retain: ");
+  USE_SERIAL.println(properties.retain);
+  USE_SERIAL.print("  len: ");
+  USE_SERIAL.println(len);
+  USE_SERIAL.print("  index: ");
+  USE_SERIAL.println(index);
+  USE_SERIAL.print("  total: ");
+  USE_SERIAL.println(total);
 }
 
 void onMqttPublish(uint16_t packetId) {
-  Serial.println("Publish acknowledged.");
-  Serial.print("  packetId: ");
-  Serial.println(packetId);
+  USE_SERIAL.println("Publish acknowledged.");
+  USE_SERIAL.print("  packetId: ");
+  USE_SERIAL.println(packetId);
 }
 
 
