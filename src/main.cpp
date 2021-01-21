@@ -116,7 +116,7 @@ void onMqttPublish(uint16_t packetId);
 void setup() {
   #include <themes/default.h>
   #include <themes/dark.h>
-  ezt::setDebug(INFO);
+  ezt::setDebug(DEBUG);
   ez.begin();
   ez.clock.tz = "Europe/Moscow";
   USE_SERIAL.begin(115200);
