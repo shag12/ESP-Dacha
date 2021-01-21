@@ -262,7 +262,7 @@ void dacha_a() {
   while(true) {
     h_get();
 
-    for(i=0;i<200000;i++) {
+    for(i=0;i<2000000;i++) {
       String btn = ez.buttons.poll();
       //if (btn == "http") h_get();
       if (btn == "Exit") return;
