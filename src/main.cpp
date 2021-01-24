@@ -26,7 +26,23 @@ TimerHandle_t mqttReconnectTimer;
 
 const char* mqtt_user = "shag";
 const char* mqtt_pass = "Assasin12";
-const char* mqtt_topic = "shag/ESP-HOME/sensors/#";
+const char* mqtt_topic = "shag/ESP-HOME/#";
+
+struct sensors
+  {
+    String name;
+    String Sens;
+    int pos; 
+    String data;
+  };
+  
+
+sensors sens[] = {
+  {"Themp: ","dsw1",60,"0"},
+  {"Hum: ","dhth1",120,"0"},
+  {"Pre: ","bmpp",180,"0"}
+};
+  
 
 
 
@@ -130,15 +146,16 @@ void setup() {
     delay(1000);
   }
   
-  //mqttReconnectTimer = xTimerCreate("mqttTimer", pdMS_TO_TICKS(2000), pdFALSE, (void*)0, reinterpret_cast<TimerCallbackFunction_t>(connectToMqtt));
+  mqttReconnectTimer = xTimerCreate("mqttTimer", pdMS_TO_TICKS(2000), pdFALSE, (void*)0, reinterpret_cast<TimerCallbackFunction_t>(connectToMqtt));
   
-  //mqttClient.onConnect(onMqttConnect);
-  //mqttClient.onDisconnect(onMqttDisconnect);
-  //mqttClient.onSubscribe(onMqttSubscribe);
-  //mqttClient.onUnsubscribe(onMqttUnsubscribe);
-  //mqttClient.onMessage(onMqttMessage);
-  //mqttClient.onPublish(onMqttPublish);
-  //mqttClient.setServer(MQTT_HOST, MQTT_PORT);
+  mqttClient.onConnect(onMqttConnect);
+  mqttClient.onDisconnect(onMqttDisconnect);
+  mqttClient.onSubscribe(onMqttSubscribe);
+  mqttClient.onUnsubscribe(onMqttUnsubscribe);
+  mqttClient.onMessage(onMqttMessage);
+  mqttClient.onPublish(onMqttPublish);
+  mqttClient.setServer(MQTT_HOST, MQTT_PORT);
+  mqttClient.setCredentials(mqtt_user,mqtt_pass);
 
   
 }
@@ -239,13 +256,13 @@ void dacha() {
    ez.header.show("Dacha");
    ez.buttons.show("#" + exit_button + "#");
 
-  //void connectToMqtt();
+  connectToMqtt();
 
   while(true) {
  
     h_get2();
 
-    for(i=0;i<200000;i++) {
+    for(i=0;i<2000000;i++) {
       String btn = ez.buttons.poll();
       //if (btn == "http") h_get();
       if (btn == "Exit") return;
@@ -371,13 +388,13 @@ void h_get2() {
   // Set timer to 5 seconds (5000)
   // unsigned long timerDelay = 5000; 
 
-  //StaticJsonDocument<3500> doc;
   DynamicJsonDocument doc(24576);
-  
-  //ez.screen.clear();
   
   HTTPClient http;
   float term;
+
+  int Pos1 = 100;
+  int Pos2 = 240;
 
        
   USE_SERIAL.print("[HTTP] begin...\n");
@@ -418,42 +435,67 @@ void h_get2() {
           JsonObject devices_0_z3k = doc["devices"][0]["io"]["z3k-state"]["4097"];
           term = devices_0_z3k["curr_temp"];
           ez.canvas.color(TFT_BLACK);
-          ez.canvas.print("Outdoor: ");
+          ez.canvas.print("Out: ");
           ez.canvas.color(TFT_BLUE);
-          //ez.canvas.x(200);
-          ez.canvas.println(String(term));
+          //ez.canvas.print("D:");
+          ez.canvas.x(90);
+          ez.canvas.print(String(term));
+     
+
+          ez.canvas.color(TFT_GREEN);
+          //ez.canvas.print(" M:");
+          ez.canvas.x(210);
+          ez.canvas.println(sens[0].data);
+       
+
           
           ez.canvas.font(&FreeSansBold12pt7b);
           devices_0_z3k = doc["devices"][0]["io"]["z3k-state"]["4096"];
           term = devices_0_z3k["curr_temp"];
           ez.canvas.color(TFT_BLACK);
-          ez.canvas.print("Umyvalnya: ");
+          ez.canvas.print("Umyv:");
           ez.canvas.color(TFT_RED);
-          ez.canvas.x(200);
-          ez.canvas.println(String(term));
+          ez.canvas.x(Pos1);
+          ez.canvas.print(String(term));
+
+          ez.canvas.color(TFT_BLACK);
+          ez.canvas.x(Pos2-65);
+          ez.canvas.print(sens[1].name);
+          ez.canvas.color(TFT_BLUE);
+          ez.canvas.x(Pos2);
+          ez.canvas.println(sens[1].data);
+
           
           devices_0_z3k = doc["devices"][0]["io"]["z3k-state"]["4099"];
           term = devices_0_z3k["curr_temp"];
           ez.canvas.color(TFT_BLACK);
-          ez.canvas.print("Andrey:         ");
+          ez.canvas.print("Andrey:");
           ez.canvas.color(TFT_RED);
-          ez.canvas.x(200);
-          ez.canvas.println(String(term));
-          
+          ez.canvas.x(Pos1);
+          ez.canvas.print(String(term));
+
+          ez.canvas.color(TFT_BLACK);
+          ez.canvas.x(Pos2-60);
+          ez.canvas.print(sens[2].name);
+          ez.canvas.color(TFT_BLUE);
+          ez.canvas.x(Pos2);
+          ez.canvas.println(sens[2].data);
+
+
           devices_0_z3k = doc["devices"][0]["io"]["z3k-state"]["4100"];
           term = devices_0_z3k["curr_temp"];
           ez.canvas.color(TFT_BLACK);
-          ez.canvas.print("Kuhnya:         ");
+          ez.canvas.print("Kuhnya: ");
           ez.canvas.color(TFT_RED);
-          ez.canvas.x(200);
-          ez.canvas.println(String(term)+"    ");
-          
+          ez.canvas.x(Pos1);
+          ez.canvas.println(String(term));
+
           devices_0_z3k = doc["devices"][0]["io"]["z3k-state"]["4108"];
           term = devices_0_z3k["curr_temp"];
           ez.canvas.color(TFT_BLACK);
           ez.canvas.print("Vanya:           ");
           ez.canvas.color(TFT_RED);
-          ez.canvas.x(200);
+          ez.canvas.x(Pos1);
           ez.canvas.println(String(term)+"    ");
           
           devices_0_z3k = doc["devices"][0]["io"]["z3k-state"]["4109"];
@@ -461,7 +503,7 @@ void h_get2() {
           ez.canvas.color(TFT_BLACK);
           ez.canvas.print("Mama:      ");
           ez.canvas.color(TFT_RED);
-          ez.canvas.x(200);
+          ez.canvas.x(Pos1);
           ez.canvas.println(String(term)+"    ");
           
         
@@ -525,21 +567,21 @@ void onMqttUnsubscribe(uint16_t packetId) {
 }
 
 void onMqttMessage(char* topic, char* payload, AsyncMqttClientMessageProperties properties, size_t len, size_t index, size_t total) {
-  USE_SERIAL.println("Publish received.");
-  USE_SERIAL.print("  topic: ");
-  USE_SERIAL.println(topic);
-  USE_SERIAL.print("  qos: ");
-  USE_SERIAL.println(properties.qos);
-  USE_SERIAL.print("  dup: ");
-  USE_SERIAL.println(properties.dup);
-  USE_SERIAL.print("  retain: ");
-  USE_SERIAL.println(properties.retain);
-  USE_SERIAL.print("  len: ");
-  USE_SERIAL.println(len);
-  USE_SERIAL.print("  index: ");
-  USE_SERIAL.println(index);
-  USE_SERIAL.print("  total: ");
-  USE_SERIAL.println(total);
+  
+  String data;
+  String s(topic); 
+
+  for(int t=0; t <3 ;t++) {
+    if(s.indexOf(sens[t].Sens)>0) {
+
+      for (int i = 0; i < len; i++) {
+        data.concat((char)payload[i]);
+      }
+      s=sens[t].name + data;
+      sens[t].data = data;
+      USE_SERIAL.println(s);
+    }
+  }
 }
 
 void onMqttPublish(uint16_t packetId) {
