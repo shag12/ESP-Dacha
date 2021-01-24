@@ -256,9 +256,10 @@ void dacha() {
    ez.header.show("Dacha");
    ez.buttons.show("#" + exit_button + "#");
 
-  connectToMqtt();
 
   while(true) {
+
+    connectToMqtt();
  
     h_get2();
 
