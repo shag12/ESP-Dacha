@@ -26,7 +26,9 @@ TimerHandle_t mqttReconnectTimer;
 
 const char* mqtt_user = "shag";
 const char* mqtt_pass = "Assasin12";
-const char* mqtt_topic = "shag/ESP-HOME/#";
+//const char* mqtt_topic = "shag/ESP-HOME/#";
+const char* mqtt_topic = "shag/#";
+
 
 struct sensors
   {
@@ -38,9 +40,12 @@ struct sensors
   
 
 sensors sens[] = {
-  {"Themp: ","dsw1",60,"0"},
-  {"Hum: ","dhth1",120,"0"},
-  {"Pre: ","bmpp",180,"0"}
+  {"Themp: ","ESP-HOME/dsw1",60,"0"},
+  {"Hum: ","ESP-HOME/dhth1",120,"0"},
+  {"Pre: ","ESP-HOME/bmpp",180,"0"},
+  {"Tp_T: ","ESP-Tpol/dsw4",120,"0"},
+  {"Tp_S: ","ESP-Tpol/dsw3",120,"0"},
+  {"Bass: ","ESP-BASS/dsw1",120,"0"}
 };
   
 
@@ -489,23 +494,46 @@ void h_get2() {
           ez.canvas.print("Kuhnya: ");
           ez.canvas.color(TFT_RED);
           ez.canvas.x(Pos1);
-          ez.canvas.println(String(term));
+          ez.canvas.print(String(term));
+
+          ez.canvas.color(TFT_BLACK);
+          ez.canvas.x(Pos2-60);
+          ez.canvas.print(sens[3].name);
+          ez.canvas.color(TFT_BLUE);
+          ez.canvas.x(Pos2+15);
+          ez.canvas.println(sens[3].data);
+
 
           devices_0_z3k = doc["devices"][0]["io"]["z3k-state"]["4108"];
           term = devices_0_z3k["curr_temp"];
           ez.canvas.color(TFT_BLACK);
-          ez.canvas.print("Vanya:           ");
+          ez.canvas.print("Vanya: ");
           ez.canvas.color(TFT_RED);
           ez.canvas.x(Pos1);
-          ez.canvas.println(String(term)+"    ");
-          
+          ez.canvas.print(String(term));
+
+          ez.canvas.color(TFT_BLACK);
+          ez.canvas.x(Pos2-60);
+          ez.canvas.print(sens[4].name);
+          ez.canvas.color(TFT_BLUE);
+          ez.canvas.x(Pos2+15);
+          ez.canvas.println(sens[4].data);
+
+        
           devices_0_z3k = doc["devices"][0]["io"]["z3k-state"]["4109"];
           term = devices_0_z3k["curr_temp"];
           ez.canvas.color(TFT_BLACK);
           ez.canvas.print("Mama:      ");
           ez.canvas.color(TFT_RED);
           ez.canvas.x(Pos1);
-          ez.canvas.println(String(term)+"    ");
+          ez.canvas.print(String(term));
+
+          ez.canvas.color(TFT_BLACK);
+          ez.canvas.x(Pos2-60);
+          ez.canvas.print(sens[5].name);
+          ez.canvas.color(TFT_BLUE);
+          ez.canvas.x(Pos2+15);
+          ez.canvas.println(sens[5].data);
           
         
           
@@ -571,8 +599,9 @@ void onMqttMessage(char* topic, char* payload, AsyncMqttClientMessageProperties 
   
   String data;
   String s(topic); 
+  //USE_SERIAL.println(s);
 
-  for(int t=0; t <3 ;t++) {
+  for(int t=0; t <6 ;t++) {
     if(s.indexOf(sens[t].Sens)>0) {
 
       for (int i = 0; i < len; i++) {
