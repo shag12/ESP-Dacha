@@ -18,7 +18,8 @@ extern "C" {
 }
 #include <AsyncMqttClient.h>
 
-#define MQTT_HOST IPAddress(178, 213, 114, 222)
+//#define MQTT_HOST IPAddress(178, 213, 114, 222)
+#define MQTT_HOST IPAddress(192, 168, 1, 3)
 #define MQTT_PORT 1883
 
 AsyncMqttClient mqttClient;
@@ -168,11 +169,11 @@ void setup() {
 void loop() {
   ezMenu mainmenu("DACHA info");
   mainmenu.txtSmall();
-  mainmenu.addItem("Image menus", mainmenu_image);
+ // mainmenu.addItem("Image menus", mainmenu_image);
   mainmenu.addItem("Built-in wifi & other settings", ez.settings.menu);
   mainmenu.addItem("DACHA", dacha);
   mainmenu.addItem("DACHA ALL", dacha_a);
-  //mainmenu.addItem("Teply pol");
+  mainmenu.addItem("Power OFF", powerOff);
   //mainmenu.addItem("Bass");
   mainmenu.upOnFirst("last|up");
   mainmenu.downOnLast("first|down");
@@ -181,18 +182,18 @@ void loop() {
 }
 
 
-void mainmenu_image() {
-  ezMenu images;
-  images.imgBackground(TFT_BLACK);
-  images.imgFromTop(40);
-  images.imgCaptionColor(TFT_WHITE);
-  images.addItem(sysinfo_jpg, "System Information", sysInfo);
-  images.addItem(wifi_jpg, "WiFi Settings", ez.wifi.menu);
-  images.addItem(about_jpg, "About M5ez", aboutM5ez);
-  images.addItem(sleep_jpg, "Power Off", powerOff);
-  images.addItem(return_jpg, "Back");
-  images.run();
-}
+//void mainmenu_image() {
+//  ezMenu images;
+//  images.imgBackground(TFT_BLACK);
+//  images.imgFromTop(40);
+//  images.imgCaptionColor(TFT_WHITE);
+//  images.addItem(sysinfo_jpg, "System Information", sysInfo);
+//  images.addItem(wifi_jpg, "WiFi Settings", ez.wifi.menu);
+//  images.addItem(about_jpg, "About M5ez", aboutM5ez);
+//  images.addItem(sleep_jpg, "Power Off", powerOff);
+//  images.addItem(return_jpg, "Back");
+//  images.run();
+//}
 
 
 void powerOff() { m5.powerOFF(); }
@@ -394,7 +395,7 @@ void h_get2() {
   // Set timer to 5 seconds (5000)
   // unsigned long timerDelay = 5000; 
 
-  DynamicJsonDocument doc(24576);
+  DynamicJsonDocument doc(25576);
   
   HTTPClient http;
   float term;
@@ -444,14 +445,15 @@ void h_get2() {
           ez.canvas.print("Out: ");
           ez.canvas.color(TFT_BLUE);
           //ez.canvas.print("D:");
-          ez.canvas.x(90);
-          ez.canvas.print(String(term));
+          //ez.canvas.x(90);
+          //ez.canvas.print(String(term));
      
 
-          ez.canvas.color(TFT_GREEN);
+          //ez.canvas.color(TFT_GREEN);
           //ez.canvas.print(" M:");
           ez.canvas.x(210);
-          ez.canvas.println(sens[0].data);
+          //ez.canvas.println(sens[0].data);
+          ez.canvas.println(String(term));
        
 
           
